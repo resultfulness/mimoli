@@ -18,10 +18,14 @@
 :root[data-theme="light"] {
     --clr-fg: var(--clr-neutral-950);
     --clr-bg: var(--clr-neutral-50);
+
+    --clr-surface: var(--clr-neutral-100);
 }
 :root[data-theme="dark"] {
     --clr-fg: var(--clr-neutral-50);
     --clr-bg: var(--clr-neutral-950);
+
+    --clr-surface: var(--clr-neutral-800);
 }
 
 body {
@@ -31,7 +35,7 @@ body {
     background-color: var(--clr-bg);
     line-height: 1.5;
     font-size: 1rem;
-    font-family: sans-serif;
+    font-family: "Lexend", sans-serif;
 }
 
 *,
