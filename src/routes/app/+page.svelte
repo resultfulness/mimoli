@@ -1,37 +1,9 @@
 <script lang="ts">
 import Icon from "$lib/components/Icon.svelte";
 import { onMount } from "svelte";
+import lsg from "$lib/data";
 
-const data = [
-    {
-        id: 1,
-        name: "toki pona"
-    },
-    {
-        id: 2,
-        name: "English Idioms"
-    },
-    {
-        id: 3,
-        name: "Spanish Verbs"
-    },
-    {
-        id: 4,
-        name: "Geography Capitals, and Their Populations and Maybe Even Flags"
-    },
-    {
-        id: 5,
-        name: "History Dates"
-    },
-    {
-        id: 6,
-        name: "Science Elements"
-    },
-    {
-        id: 7,
-        name: "Programming Concepts"
-    }
-];
+const data = lsg.getSetList();
 
 let isDarkMode: boolean = true;
 
@@ -56,7 +28,7 @@ function toggleTheme() {
 <ul>
     {#each data as { id, name }}
         <li>
-            <a href="/set/{id}">
+            <a href="/app/set/{id}">
                 <h2>
                     {name}
                 </h2>
@@ -71,13 +43,11 @@ header {
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: center;
-}
-
-h1, h2 {
-    margin-left: 1rem;
+    padding-inline: 1.5rem;
 }
 
 h2 {
+    margin-left: 1rem;
     font-weight: 400;
     font-size: 1.25rem;
 }
@@ -103,7 +73,7 @@ header button:focus {
 ul {
     list-style-type: none;
     margin: 0;
-    padding: 0;
+    padding: 1rem;
     display: grid;
     align-items: start;
     gap: 1rem;

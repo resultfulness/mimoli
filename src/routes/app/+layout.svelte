@@ -4,7 +4,9 @@
 
 <style>
 main {
-    padding: 0 1rem 1rem;
+    display: flex;
+    flex-direction: column;
     height: 100vh;
+    height: 100dvh;
 }
 </style>
