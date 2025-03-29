@@ -1,9 +1,9 @@
 <script lang="ts">
 import Icon from "$lib/components/Icon.svelte";
 import { onMount } from "svelte";
-import lsg from "$lib/data";
+import dataProvider from "$lib/data";
 
-const data = lsg.getSetList();
+const sets = dataProvider.getSets();
 
 let isDarkMode: boolean = true;
 
@@ -26,7 +26,7 @@ function toggleTheme() {
     </button>
 </header>
 <ul>
-    {#each data as { id, name }}
+    {#each sets as { id, name }}
         <li>
             <a href="/app/set/{id}">
                 <h2>
