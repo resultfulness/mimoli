@@ -1,8 +1,9 @@
-import type { LearnSet } from "$lib/types";
+import type { LearnSet, LearnSetOverview } from "$lib/types";
 import DataProviderMock from "./mock";
 
 export interface DataProvider {
-    getSets: () => LearnSet[];
+    getSetOverviews: () => LearnSetOverview[];
+    getSetById: (id: number) => LearnSet | undefined;
 }
 
 export default new DataProviderMock() as DataProvider;

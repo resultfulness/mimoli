@@ -3,7 +3,7 @@ import Icon from "$lib/components/Icon.svelte";
 import { onMount } from "svelte";
 import dataProvider from "$lib/data";
 
-const sets = dataProvider.getSets();
+const sets = dataProvider.getSetOverviews();
 
 let isDarkMode: boolean = true;
 
