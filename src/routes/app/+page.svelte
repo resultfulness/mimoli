@@ -1,9 +1,9 @@
 <script lang="ts">
 import Icon from "$lib/components/Icon.svelte";
 import { onMount } from "svelte";
-import dataProvider from "$lib/data";
+import setController from "$lib/data";
 
-const sets = dataProvider.getSetOverviews();
+const sets = setController.getSetOverviews();
 
 let isDarkMode: boolean = true;
 
@@ -18,6 +18,10 @@ function toggleTheme() {
     document.documentElement.setAttribute("data-theme", updated)
 }
 </script>
+
+<svelte:head>
+    <title>mimoli -- set list</title>
+</svelte:head>
 
 <header>
     <h1>Set list</h1>

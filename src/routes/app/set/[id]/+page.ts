@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
-import dataProvider from "$lib/data";
+import setController from "$lib/data";
 
 export const load: PageLoad = ({ params }) => {
     if (!Number.isInteger(+params.id)) {
@@ -8,13 +8,10 @@ export const load: PageLoad = ({ params }) => {
     }
     const id = +params.id;
 
-    const set = dataProvider.getSetById(id)
+    const set = setController.getSetById(id)
     if (set === undefined) {
         throw error(404, `no set with id ${id}`);
     }
 
-    return {
-        id,
-        set
-    };
+    return { set };
 };

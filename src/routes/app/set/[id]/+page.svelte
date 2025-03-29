@@ -4,4 +4,8 @@
     let { data }: PageProps = $props();
 </script>
 
-{data.id}
+<svelte:head>
+    <title>mimoli -- {data.set.name}</title>
+</svelte:head>
+
+{data.set.id}

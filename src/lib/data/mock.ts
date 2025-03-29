@@ -1,7 +1,7 @@
 import type { LearnSet, LearnSetOverview } from "$lib/types";
-import type { DataProvider } from ".";
+import type { SetController } from ".";
 
-export default class DataProviderMock implements DataProvider {
+export default class SetControllerMock implements SetController {
     // {{{data
     data: LearnSet[] = [
         {
@@ -58,7 +58,9 @@ export default class DataProviderMock implements DataProvider {
     // }}}
 
     getSetOverviews() {
-        return this.data.map(({ id, name }) => { return { id, name }; });
+        return this.data.map(({ id, name }) => {
+            return { id, name } as LearnSetOverview;
+        });
     }
 
     getSetById(id: number) {
