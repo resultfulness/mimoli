@@ -1,11 +1,9 @@
 <script lang="ts">
-    import type { PageProps } from "./$types";
+    import type { LayoutProps } from "./$types";
 
-    let { data }: PageProps = $props();
+    let { data }: LayoutProps = $props();
 </script>
 
 <svelte:head>
     <title>mimoli -- {data.set.name}</title>
 </svelte:head>
-
-{data.set.id}

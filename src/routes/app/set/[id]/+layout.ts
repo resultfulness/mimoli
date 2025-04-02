@@ -1,8 +1,8 @@
 import { error } from '@sveltejs/kit';
-import type { PageLoad } from './$types';
+import type { LayoutLoad } from './$types';
 import setController from "$lib/data";
 
-export const load: PageLoad = ({ params }) => {
+export const load: LayoutLoad = ({ params }) => {
     if (!Number.isInteger(+params.id)) {
         throw error(422, `set id '${params.id}' not a number`);
     }

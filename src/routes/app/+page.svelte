@@ -2,6 +2,8 @@
 import Icon from "$lib/components/Icon.svelte";
 import { onMount } from "svelte";
 import setController from "$lib/data";
+import SetMenu from "./SetMenu.svelte";
+import type { LearnSetOverview } from "$lib/types";
 
 const sets = setController.getSetOverviews();
 
@@ -17,12 +19,16 @@ function toggleTheme() {
     localStorage.setItem("theme", updated);
     document.documentElement.setAttribute("data-theme", updated)
 }
+
+let setMenuSet: LearnSetOverview = { id: -1, name: "foo" };
+let setMenu: HTMLDialogElement;
 </script>
 
 <svelte:head>
     <title>mimoli -- set list</title>
 </svelte:head>
 
+<SetMenu bind:setMenu {setMenuSet} />
 <header>
     <h1>Set list</h1>
     <button on:click={toggleTheme}>
@@ -32,12 +38,15 @@ function toggleTheme() {
 <ul>
     {#each sets as { id, name }}
         <li>
-            <a href="/app/set/{id}">
+            <button on:click={() => {
+                setMenuSet = { id, name };
+                setMenu.showModal();
+            }}>
                 <h2>
                     {name}
                 </h2>
                 <Icon name="chevron_right" size={32} />
-            </a>
+            </button>
         </li>
     {/each}
 </ul>
@@ -85,16 +94,22 @@ ul {
 }
 
 li {
-    padding: 0.25rem 1rem;
     border-radius: 1rem;
     background-color: var(--clr-surface);
+    overflow: hidden;
 }
 
-li a {
+li button {
+    padding: 0.25rem 1rem;
+    width: 100%;
     text-decoration: none;
     color: inherit;
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: center;
+    background-color: inherit;
+    border: 0;
+    text-align: left;
+    cursor: pointer;
 }
 </style>
