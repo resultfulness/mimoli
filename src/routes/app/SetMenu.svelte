@@ -4,9 +4,11 @@ import type { LearnSetOverview } from "$lib/types";
 
 export let setMenu: HTMLDialogElement;
 export let setMenuSet: LearnSetOverview;
+
+let delButton: HTMLButtonElement;
 </script>
 
-<dialog bind:this={setMenu}>
+<dialog bind:this={setMenu} onclose={() => { delButton.style.display = "none" }}>
     <header>
         <h2>{setMenuSet.name} set</h2>
         <button class="close" onclick={() => setMenu.close()}>
@@ -14,22 +16,31 @@ export let setMenuSet: LearnSetOverview;
         </button>
     </header>
     <div>
-        <button>
+        <a href="/app/set/{setMenuSet.id}" class="set-menu-option">
             <Icon name="search" />
             browse
-        </button>
-        <button>
+        </a>
+        <a href="/app/set/{setMenuSet.id}/edit" class="set-menu-option">
             <Icon name="edit" />
             edit
-        </button>
-        <button>
-            <Icon name="delete" />
-            delete
-        </button>
-        <button>
+        </a>
+        <form action="/app/set/{setMenuSet.id}?/delete" method="POST">
+            <button
+                type="button"
+                onclick={() => delButton.style.display="grid" }
+                class="set-menu-option">
+                <Icon name="delete" />
+                delete
+            </button>
+            <button class="set-menu-option confirm-delete-button" bind:this={delButton}>
+                <Icon name="question_mark" />
+                confirm
+            </button>
+        </form>
+        <a href="/app/set/{setMenuSet.id}/test" class="set-menu-option">
             <Icon name="quiz" />
             test
-        </button>
+        </a>
     </div>
 </dialog>
 
@@ -40,6 +51,10 @@ dialog {
     border-radius: 1rem;
     background-color: var(--clr-surface);
     color: var(--clr-fg);
+}
+
+dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 header {
@@ -67,13 +82,41 @@ button.close {
 div {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
+    gap: 0.2rem;
+    border-radius: 1rem;
+    overflow: hidden;
 }
 
-div button {
+.set-menu-option {
     padding: 1rem;
     cursor: pointer;
     display: grid;
+    place-items: center;
+    border: 0;
+    background-color: var(--clr-accent-darker);
+    color: inherit;
+    text-decoration: none;
 }
 
+.set-menu-option:hover {
+    background-color: var(--clr-accent-dark);
+}
+
+form {
+    position: relative;
+}
+
+form button {
+    position: absolute;
+    inset: 0;
+}
+
+.confirm-delete-button {
+    display: none;
+    background-color: var(--clr-alert);
+}
+
+.confirm-delete-button:hover {
+    background-color: var(--clr-alert);
+}
 </style>

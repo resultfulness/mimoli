@@ -4,9 +4,10 @@
 
 <style>
 main {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: auto 1fr;
     height: 100vh;
     height: 100dvh;
+    overflow: hidden;
 }
 </style>

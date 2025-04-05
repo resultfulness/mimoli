@@ -13,6 +13,8 @@
     --clr-neutral-100: #ebfcfc;
     --clr-neutral-200: #daf9f9;
     --clr-neutral-300: #c9f6f6;
+
+    --clr-red: #ef7060;
 }
 
 :root[data-theme="light"] {
@@ -20,12 +22,16 @@
     --clr-bg: var(--clr-neutral-50);
 
     --clr-surface: var(--clr-neutral-100);
+    
+    --clr-alert: var(--clr-red);
 }
 :root[data-theme="dark"] {
     --clr-fg: var(--clr-neutral-50);
     --clr-bg: var(--clr-neutral-950);
 
     --clr-surface: var(--clr-neutral-800);
+
+    --clr-alert: var(--clr-red);
 }
 
 body {
@@ -42,4 +48,11 @@ body {
 *::before,
 *::after {
     box-sizing: border-box;
+}
+
+button,
+input,
+textarea {
+    font: inherit;
+    color: inherit;
 }

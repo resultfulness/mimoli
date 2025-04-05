@@ -87,9 +87,6 @@ ul {
     list-style-type: none;
     margin: 0;
     padding: 1rem;
-    display: grid;
-    align-items: start;
-    gap: 1rem;
     overflow: scroll;
 }
 
@@ -97,6 +94,10 @@ li {
     border-radius: 1rem;
     background-color: var(--clr-surface);
     overflow: hidden;
+}
+
+li + li {
+    margin-top: 1rem;
 }
 
 li button {

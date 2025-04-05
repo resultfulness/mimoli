@@ -7,13 +7,9 @@
 </script>
 
 <svelte:head>
-    <title>mimoli -- {data.set.name}</title>
+    <title>mimoli -- test {data.set.name}</title>
 </svelte:head>
 
 <ul>
-    {#each cards as card}
-        <li>
-            {card.front} {card.back}
-        </li>
-    {/each}
+    ...
 </ul>
