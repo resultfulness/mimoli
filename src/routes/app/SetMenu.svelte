@@ -8,21 +8,20 @@ export let setMenuSet: LearnSetOverview;
 let delButton: HTMLButtonElement;
 </script>
 
-<dialog bind:this={setMenu} onclose={() => { delButton.style.display = "none" }}>
+<dialog
+    bind:this={setMenu}
+    onclose={() => { delButton.style.display = "none" }}
+    onclick={(event) => event.target === setMenu && setMenu.close()}>
     <header>
-        <h2>{setMenuSet.name} set</h2>
+        <h2>{setMenuSet.name}</h2>
         <button class="close" onclick={() => setMenu.close()}>
             <Icon name="close" size={32} />
         </button>
     </header>
     <div>
-        <a href="/app/set/{setMenuSet.id}" class="set-menu-option">
-            <Icon name="search" />
-            browse
-        </a>
-        <a href="/app/set/{setMenuSet.id}/edit" class="set-menu-option">
-            <Icon name="edit" />
-            edit
+        <a href="/app/set/{setMenuSet.id}/test" class="set-menu-option">
+            <Icon name="quiz" />
+            test
         </a>
         <form action="/app/set/{setMenuSet.id}?/delete" method="POST">
             <button
@@ -37,9 +36,9 @@ let delButton: HTMLButtonElement;
                 confirm
             </button>
         </form>
-        <a href="/app/set/{setMenuSet.id}/test" class="set-menu-option">
-            <Icon name="quiz" />
-            test
+        <a href="/app/set/{setMenuSet.id}" class="set-menu-option">
+            <Icon name="edit" />
+            edit
         </a>
     </div>
 </dialog>
@@ -51,6 +50,7 @@ dialog {
     border-radius: 1rem;
     background-color: var(--clr-surface);
     color: var(--clr-fg);
+    width: min(100% - 4rem, 320px);
 }
 
 dialog::backdrop {
@@ -85,6 +85,10 @@ div {
     gap: 0.2rem;
     border-radius: 1rem;
     overflow: hidden;
+}
+
+.set-menu-option:first-of-type {
+    grid-column: span 2;
 }
 
 .set-menu-option {
