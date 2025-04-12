@@ -1,4 +1,4 @@
-import type { LearnSet, LearnSetOverview } from "$lib/types";
+import type { LearnCard, LearnSet, LearnSetOverview } from "$lib/types";
 import type { SetController } from ".";
 
 export default class SetControllerMock implements SetController {
@@ -59,4 +59,12 @@ export default class SetControllerMock implements SetController {
     deleteSetById(id: number) {
         this.data.splice(this.data.findIndex(v => v.id === id), 1);
     }
+
+    updateSetCardByIdByIndex(id: number, cardIndex: number, newCard: LearnCard) {
+        const set = this.getSetById(id);
+        if (!set) {
+            return;
+        }
+        set.cards[cardIndex] = newCard;
+    };
 }

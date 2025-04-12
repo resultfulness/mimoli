@@ -1,47 +1,67 @@
 <script lang="ts">
-import Icon from "$lib/components/Icon.svelte";
-import { onMount } from "svelte";
-import setController from "$lib/data";
-import SetMenu from "./SetMenu.svelte";
-import type { LearnSetOverview } from "$lib/types";
+    import Icon from "$lib/components/Icon.svelte";
+    import setController from "$lib/data";
+    import ThemeSwitchButton from "./ThemeSwitchButton.svelte";
+    import Modal from "$lib/components/Modal.svelte";
+    import type { LearnSetOverview } from "$lib/types";
 
-const sets = setController.getSetOverviews();
+    const sets = setController.getSetOverviews();
 
-let isDarkMode: boolean = true;
-
-onMount(() => {
-    isDarkMode = document.documentElement.getAttribute("data-theme") === "dark";
-});
-
-function toggleTheme() {
-    isDarkMode = !isDarkMode;
-    const updated = isDarkMode ? "dark" : "light";
-    localStorage.setItem("theme", updated);
-    document.documentElement.setAttribute("data-theme", updated)
-}
-
-let setMenuSet: LearnSetOverview = { id: -1, name: "foo" };
-let setMenu: HTMLDialogElement;
+    let setMenuSet: LearnSetOverview = { id: -1, name: "foo" };
+    let setMenu: HTMLDialogElement;
+    let delButton: HTMLButtonElement;
 </script>
 
 <svelte:head>
     <title>mimoli -- set list</title>
 </svelte:head>
 
-<SetMenu bind:setMenu {setMenuSet} />
+<Modal
+    bind:modal={setMenu}
+    onclose={() => (delButton.style.display = "none")}
+    title={setMenuSet.name}
+>
+    <div class="modal">
+        <a href="/app/set/{setMenuSet.id}/test" class="set-menu-option">
+            <Icon name="quiz" />
+            test
+        </a>
+        <form action="/app/set/{setMenuSet.id}?/delete" method="POST">
+            <button
+                type="button"
+                onclick={() => (delButton.style.display = "grid")}
+                class="set-menu-option"
+            >
+                <Icon name="delete" />
+                delete
+            </button>
+            <button
+                class="set-menu-option confirm-delete-button"
+                bind:this={delButton}
+            >
+                <Icon name="question_mark" />
+                confirm
+            </button>
+        </form>
+        <a href="/app/set/{setMenuSet.id}" class="set-menu-option">
+            <Icon name="edit" />
+            edit
+        </a>
+    </div>
+</Modal>
 <header>
     <h1>Set list</h1>
-    <button on:click={toggleTheme}>
-        <Icon name={isDarkMode ? "light_mode" : "dark_mode"} size={32} />
-    </button>
+    <ThemeSwitchButton />
 </header>
 <ul>
     {#each sets as { id, name }}
         <li>
-            <button on:click={() => {
-                setMenuSet = { id, name };
-                setMenu.showModal();
-            }}>
+            <button
+                onclick={() => {
+                    setMenuSet = { id, name };
+                    setMenu.showModal();
+                }}
+            >
                 <h2>
                     {name}
                 </h2>
@@ -52,65 +72,92 @@ let setMenu: HTMLDialogElement;
 </ul>
 
 <style>
-header {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: center;
-    padding-inline: 1.5rem;
-}
+    header {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        padding-inline: 1.5rem;
+    }
 
-h2 {
-    margin-left: 1rem;
-    font-weight: 400;
-    font-size: 1.25rem;
-}
+    h2 {
+        margin-left: 1rem;
+        font-weight: 400;
+        font-size: 1.25rem;
+    }
 
-header button {
-    display: grid;
-    place-items: center;
-    text-decoration: none;
-    color: inherit;
-    padding: .5rem;
-    border-radius: 100vw;
-    border: 0;
-    background-color: inherit;
-    cursor: pointer;
-}
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 1rem;
+        overflow: scroll;
+    }
 
-header button:hover,
-header button:focus {
-    background-color: var(--clr-surface);
-}
+    li {
+        border-radius: 1rem;
+        background-color: var(--clr-surface);
+        overflow: hidden;
+    }
 
+    li + li {
+        margin-top: 1rem;
+    }
 
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 1rem;
-    overflow: scroll;
-}
+    li button {
+        padding: 0.25rem 1rem;
+        width: 100%;
+        text-decoration: none;
+        color: inherit;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        background-color: inherit;
+        border: 0;
+        text-align: left;
+        cursor: pointer;
+    }
 
-li {
-    border-radius: 1rem;
-    background-color: var(--clr-surface);
-    overflow: hidden;
-}
+    .modal {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.2rem;
+        border-radius: 1rem;
+        overflow: hidden;
+    }
 
-li + li {
-    margin-top: 1rem;
-}
+    .modal .set-menu-option:first-of-type {
+        grid-column: span 2;
+    }
 
-li button {
-    padding: 0.25rem 1rem;
-    width: 100%;
-    text-decoration: none;
-    color: inherit;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: center;
-    background-color: inherit;
-    border: 0;
-    text-align: left;
-    cursor: pointer;
-}
+    .modal .set-menu-option {
+        padding: 1rem;
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+        border: 0;
+        background-color: var(--clr-accent-darker);
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .modal .set-menu-option:hover {
+        background-color: var(--clr-accent-dark);
+    }
+
+    .modal form {
+        position: relative;
+    }
+
+    .modal form button {
+        position: absolute;
+        inset: 0;
+    }
+
+    .modal .confirm-delete-button {
+        display: none;
+        background-color: var(--clr-alert);
+    }
+
+    .modal .confirm-delete-button:hover {
+        background-color: var(--clr-alert);
+    }
 </style>
