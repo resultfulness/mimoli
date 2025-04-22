@@ -9,7 +9,7 @@ export const actions: Actions = {
         }
         const id = +params.id;
 
-        setController.deleteSetById(id);
+        await setController.delSet(id);
 
         redirect(303, "/");
     },
@@ -24,7 +24,7 @@ export const actions: Actions = {
             throw error(400);
         }
 
-        setController.updateSetCardByIdByIndex(
+        await setController.setEditCard(
             +setId,
             +cardIndex.toString(),
             {
@@ -45,7 +45,7 @@ export const actions: Actions = {
             throw error(400);
         }
 
-        setController.addCardToSet(
+        await setController.setAddCard(
             +setId,
             { front: f.toString(), back: b.toString() }
         );

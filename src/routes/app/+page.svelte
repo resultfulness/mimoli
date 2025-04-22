@@ -4,11 +4,13 @@ import setController from "$lib/data";
 import ThemeSwitchButton from "./ThemeSwitchButton.svelte";
 import Modal from "$lib/components/Modal.svelte";
 import type { LearnSetOverview } from "$lib/types";
+import type { PageProps } from "./$types";
 
-const sets = setController.getSetOverviews();
+const { data }: PageProps = $props();
+const sets = data.sets;
 
-let setMenuSet: LearnSetOverview = { id: -1, name: "foo" };
-let setMenu: HTMLDialogElement;
+let setMenuSet: LearnSetOverview = $state({ id: -1, name: "foo" });
+let setMenu: HTMLDialogElement = $state()!;
 let delButton: HTMLButtonElement;
 </script>
 

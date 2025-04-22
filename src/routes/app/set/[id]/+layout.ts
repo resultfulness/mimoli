@@ -8,7 +8,7 @@ export const load: LayoutLoad = async ({ params }) => {
     }
     const id = +params.id;
 
-    const set = setController.getSetById(id)
+    const set = await setController.getSet(id);
     if (set === undefined) {
         throw error(404, `no set with id ${id}`);
     }
