@@ -13,23 +13,43 @@ export const actions: Actions = {
 
         redirect(303, "/");
     },
-    update: async ({ url, request }) => {
+    update: async ({ request }) => {
         const formData = await request.formData();
         const f = formData.get("front");
         const b = formData.get("back");
         const cardIndex = formData.get("card-index");
+        const setId = formData.get("set-id");
 
-        if (f === null || b === null || cardIndex === null) {
+        if (f === null || b === null || cardIndex === null || setId === null) {
             throw error(400);
         }
 
         setController.updateSetCardByIdByIndex(
-            +url.pathname.split("/").at(-1)!,
+            +setId,
             +cardIndex.toString(),
             {
                 front: f.toString(),
                 back: b.toString()
             }
-        )
+        );
+
+        redirect(303, `/app/set/${setId}`);
+    },
+    add: async ({ request }) => {
+        const formData = await request.formData();
+        const f = formData.get("front");
+        const b = formData.get("back");
+        const setId = formData.get("set-id");
+
+        if (f === null || b === null || setId === null) {
+            throw error(400);
+        }
+
+        setController.addCardToSet(
+            +setId,
+            { front: f.toString(), back: b.toString() }
+        );
+
+        redirect(303, `/app/set/${setId}`);
     }
 };

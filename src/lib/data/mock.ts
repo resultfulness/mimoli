@@ -67,4 +67,12 @@ export default class SetControllerMock implements SetController {
         }
         set.cards[cardIndex] = newCard;
     };
+
+    addCardToSet(id: number, newCard: LearnCard) {
+        const set = this.getSetById(id);
+        if (!set) {
+            return;
+        }
+        set.cards.push(newCard);
+    }
 }

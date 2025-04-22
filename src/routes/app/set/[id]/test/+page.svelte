@@ -1,9 +1,9 @@
 <script lang="ts">
-    import type { LayoutProps } from "./$types";
+import type { LayoutProps } from "./$types";
 
-    let { data }: LayoutProps = $props();
+let { data }: LayoutProps = $props();
 
-    const cards = data.set.cards;
+const cards = data.set.cards;
 </script>
 
 <svelte:head>

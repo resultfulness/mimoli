@@ -1,4 +1,4 @@
-import type { LayoutLoad } from "./browse/$types";
+import type { LayoutLoad } from "./$types";
 import setController from "$lib/data";
 import { error } from "@sveltejs/kit";
 
