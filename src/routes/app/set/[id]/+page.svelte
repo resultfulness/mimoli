@@ -87,7 +87,10 @@ async function deletecard() {
 </header>
 <ul>
     click to edit
-    {#each set.cards.filter(v => v.front.includes(searchterm) || v.back.includes(searchterm)) as card, i}
+    {#each set.cards.filter(
+        (v) => v.front.toLowerCase().includes(searchterm.toLowerCase()) ||
+            v.back.toLowerCase().includes(searchterm.toLowerCase())
+    ) as card, i}
         <li>
             <button
                 class="edit-button"
@@ -132,13 +135,13 @@ async function deletecard() {
     }
 
     textarea {
-        background-color: var(--clr-neutral-700);
+        background-color: var(--clr-s1);
         border: 0;
         padding: 1rem;
     }
 
     form button {
-        background-color: var(--clr-accent);
+        background-color: var(--clr-main);
         color: var(--clr-bg);
         border: 0;
         padding: 0.5rem 1rem;
@@ -174,7 +177,7 @@ async function deletecard() {
     }
 
     li {
-        background-color: var(--clr-surface);
+        background-color: var(--clr-s0);
         border-radius: 1rem;
 
         display: grid;
@@ -221,6 +224,6 @@ async function deletecard() {
     }
 
     li button:hover {
-        background-color: var(--clr-accent-darker);
+        background-color: var(--clr-s1);
     }
 </style>

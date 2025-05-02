@@ -35,7 +35,7 @@ let {
 dialog {
     border: 0;
     border-radius: 1rem;
-    background-color: var(--clr-surface);
+    background-color: var(--clr-s0);
     color: var(--clr-fg);
     width: min(100% - 4rem, 320px);
 }
@@ -50,6 +50,7 @@ header {
     justify-content: space-between;
     gap: 4rem;
     margin-bottom: 1rem;
+    word-break: break-word;
 }
 
 h2 {

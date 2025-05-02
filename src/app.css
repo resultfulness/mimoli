@@ -1,37 +1,16 @@
-:root {
-    --clr-accent: #43dfdf;
-    --clr-accent-light: #86eaea;
-    --clr-accent-dark: #137272;
-    --clr-accent-darker: #0e5050;
-
-    --clr-neutral-950: #020d0d;
-    --clr-neutral-900: #051e1e;
-    --clr-neutral-800: #082f2f;
-    --clr-neutral-700: #0b3f3f;
-
-    --clr-neutral-50: #fbfefe;
-    --clr-neutral-100: #ebfcfc;
-    --clr-neutral-200: #daf9f9;
-    --clr-neutral-300: #c9f6f6;
-
-    --clr-red: #ef7060;
-}
-
-:root[data-theme="light"] {
-    --clr-fg: var(--clr-neutral-950);
-    --clr-bg: var(--clr-neutral-50);
-
-    --clr-surface: var(--clr-neutral-100);
-    
-    --clr-alert: var(--clr-red);
-}
 :root[data-theme="dark"] {
-    --clr-fg: var(--clr-neutral-50);
-    --clr-bg: var(--clr-neutral-950);
+    --clr-main: #8bbe1b;
+    --clr-main-hover: #b1e441;
 
-    --clr-surface: var(--clr-neutral-800);
+    --clr-bg: #0d0f0b;
+    --clr-fg: #f8fdef;
 
-    --clr-alert: var(--clr-red);
+    --clr-s0: #1f2612;
+    --clr-s1: #293117;
+    --clr-s2: #323e17;
+
+    --clr-error: #be4e1b;
+    --clr-warning: #bea01b;
 }
 
 body {

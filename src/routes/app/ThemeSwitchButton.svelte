@@ -36,6 +36,6 @@
 
     button:hover,
     button:focus {
-        background-color: var(--clr-surface);
+        background-color: var(--clr-s1);
     }
 </style>

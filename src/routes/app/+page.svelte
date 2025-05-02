@@ -1,10 +1,11 @@
 <script lang="ts">
 import Icon from "$lib/components/Icon.svelte";
 import setController from "$lib/data";
-import ThemeSwitchButton from "./ThemeSwitchButton.svelte";
 import Modal from "$lib/components/Modal.svelte";
 import type { LearnSetOverview } from "$lib/types";
 import type { PageProps } from "./$types";
+import Input from "$lib/components/Input.svelte";
+import Button from "$lib/components/Button.svelte";
 
 const { data }: PageProps = $props();
 let sets = $state(data.sets);
@@ -16,10 +17,19 @@ let delButton: HTMLButtonElement;
 let setMenuSet: LearnSetOverview = $state({ id: -1, name: "foo" });
 let newsetname = $state("");
 let errormessage = $state("");
+let searchterm = $state("");
 
 async function createset() {
+    if (newsetname.trim().length === 0) {
+        errormessage = "set name cannot be empty";
+        return;
+    }
+    if (newsetname.trim().length > 20) {
+        errormessage = "set name can be at most 20 characters";
+        return;
+    }
     try {
-        await setController.addSet(newsetname);
+        await setController.addSet(newsetname.trim());
         sets = await setController.getSetOverviews();
         addMenu.close();
     } catch (e) {
@@ -39,14 +49,62 @@ async function deleteset() {
     <title>mimoli -- set list</title>
 </svelte:head>
 
-<Modal bind:modal={addMenu} onclose={() => { newsetname = "" }} title="New set">
-    <form onsubmit={createset}>
+<header>
+    <h1>Set list</h1>
+</header>
+<main>
+    <Input
+        type="text"
+        placeholder="search..."
+        bind:value={searchterm}
+        style={`width: 100%`} />
+    <ul>
+        {#each sets.filter(
+            (v) => v.name.toLowerCase().includes(searchterm.toLowerCase())
+        ) as { id, name }}
+            <li>
+                <button
+                    onclick={() => {
+                        setMenuSet = { id, name };
+                        setMenu.showModal();
+                    }}
+                >
+                    <h2>
+                        {name}
+                    </h2>
+                    <Icon name="chevron_right" size={32} />
+                </button>
+            </li>
+        {/each}
+    </ul>
+    <Button
+        onclick={() => addMenu.showModal()}
+        style={`
+position: absolute;
+bottom: 0;
+right: 0;
+margin: 1rem;
+`}
+    >
+        <Icon name="add" size={48} />
+    </Button>
+</main>
+
+<Modal
+    bind:modal={addMenu}
+    onclose={() => {
+        newsetname = "";
+        errormessage = "";
+    }}
+    title="New set"
+>
+    <form onsubmit={createset} class="add-form">
         <label>
             name
-            <input type="text" bind:value={newsetname} required />
+            <Input type="text" bind:value={newsetname} --outline={errormessage.length > 0 ? "1px solid var(--clr-error)" : "none"} />
         </label>
         <p>{errormessage}</p>
-        <button>create</button>
+        <Button>create</Button>
     </form>
 </Modal>
 <Modal
@@ -82,43 +140,12 @@ async function deleteset() {
         </a>
     </div>
 </Modal>
-<header>
-    <h1>Set list</h1>
-    <ThemeSwitchButton />
-</header>
-<ul>
-    {#each sets as { id, name }}
-        <li>
-            <button
-                onclick={() => {
-                    setMenuSet = { id, name };
-                    setMenu.showModal();
-                }}
-            >
-                <h2>
-                    {name}
-                </h2>
-                <Icon name="chevron_right" size={32} />
-            </button>
-        </li>
-    {/each}
-</ul>
-<footer>
-    <input type="text" placeholder="search..."/>
-    <button onclick={() => addMenu.showModal() }>
-        <Icon name="add" size={32} />
-    </button>
-</footer>
 
 <style>
-header {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: center;
-    padding-inline: 1.5rem;
-}
-
 h2 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     margin-left: 1rem;
     font-weight: 400;
     font-size: 1.25rem;
@@ -127,13 +154,14 @@ h2 {
 ul {
     list-style-type: none;
     margin: 0;
-    padding: 1rem;
+    margin-top: 1rem;
+    padding: 0;
     overflow: scroll;
 }
 
 li {
     border-radius: 1rem;
-    background-color: var(--clr-surface);
+    background-color: var(--clr-s0);
     overflow: hidden;
 }
 
@@ -173,13 +201,13 @@ li button {
     display: grid;
     place-items: center;
     border: 0;
-    background-color: var(--clr-accent-darker);
+    background-color: var(--clr-s1);
     color: inherit;
     text-decoration: none;
 }
 
 .modal .set-menu-option:hover {
-    background-color: var(--clr-accent-dark);
+    background-color: var(--clr-s2);
 }
 
 .modal form {
@@ -193,10 +221,24 @@ li button {
 
 .modal .confirm-delete-button {
     display: none;
-    background-color: var(--clr-alert);
+    background-color: var(--clr-error);
 }
 
 .modal .confirm-delete-button:hover {
-    background-color: var(--clr-alert);
+    background-color: var(--clr-error);
+}
+
+.add-form {
+    display: grid;
+    gap: 0.5rem;
+    text-indent: 0.25rem;
+}
+.add-form label {
+    display: grid;
+    gap: 0.5rem;
+}
+.add-form p {
+    margin: 0;
+    color: var(--clr-error);
 }
 </style>

@@ -8,7 +8,13 @@ import "../app.css";
 
 <style>
 #app {
+    position: relative;
     max-width: 640px;
     margin-inline: auto;
+    padding-inline: 1rem;
+    height: 100vh;
+    height: 100dvh;
+    display: grid;
+    grid-template-rows: auto 1fr;
 }
 </style>

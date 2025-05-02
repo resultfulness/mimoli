@@ -21,7 +21,7 @@
     color: var(--clr-bg);
   }
   .light {
-    color: var(--clr-text);
+    color: var(--clr-fg);
   }
 </style>
 
