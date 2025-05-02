@@ -7,17 +7,48 @@ import type { LearnSetOverview } from "$lib/types";
 import type { PageProps } from "./$types";
 
 const { data }: PageProps = $props();
-const sets = data.sets;
+let sets = $state(data.sets);
+
+let setMenu: HTMLDialogElement = $state()!;
+let addMenu: HTMLDialogElement = $state()!;
+let delButton: HTMLButtonElement;
 
 let setMenuSet: LearnSetOverview = $state({ id: -1, name: "foo" });
-let setMenu: HTMLDialogElement = $state()!;
-let delButton: HTMLButtonElement;
+let newsetname = $state("");
+let errormessage = $state("");
+
+async function createset() {
+    try {
+        await setController.addSet(newsetname);
+        sets = await setController.getSetOverviews();
+        addMenu.close();
+    } catch (e) {
+        errormessage = "set with this name already exists";
+        return;
+    }
+}
+
+async function deleteset() {
+    await setController.delSet(setMenuSet.id);
+    sets = await setController.getSetOverviews();
+    setMenu.close();
+}
 </script>
 
 <svelte:head>
     <title>mimoli -- set list</title>
 </svelte:head>
 
+<Modal bind:modal={addMenu} onclose={() => { newsetname = "" }} title="New set">
+    <form onsubmit={createset}>
+        <label>
+            name
+            <input type="text" bind:value={newsetname} required />
+        </label>
+        <p>{errormessage}</p>
+        <button>create</button>
+    </form>
+</Modal>
 <Modal
     bind:modal={setMenu}
     onclose={() => (delButton.style.display = "none")}
@@ -28,7 +59,7 @@ let delButton: HTMLButtonElement;
             <Icon name="quiz" />
             test
         </a>
-        <form action="/app/set/{setMenuSet.id}?/delete" method="POST">
+        <form onsubmit={deleteset}>
             <button
                 type="button"
                 onclick={() => (delButton.style.display = "grid")}
@@ -72,6 +103,12 @@ let delButton: HTMLButtonElement;
         </li>
     {/each}
 </ul>
+<footer>
+    <input type="text" placeholder="search..."/>
+    <button onclick={() => addMenu.showModal() }>
+        <Icon name="add" size={32} />
+    </button>
+</footer>
 
 <style>
 header {

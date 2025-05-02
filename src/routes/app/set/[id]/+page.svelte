@@ -1,147 +1,226 @@
 <script lang="ts">
 import Icon from "$lib/components/Icon.svelte";
 import Modal from "$lib/components/Modal.svelte";
+import setController from "$lib/data";
 import type { LayoutProps } from "./$types";
 
 let { data }: LayoutProps = $props();
-
-const cards = data.set.cards;
+let set = $state(data.set);
 
 let editMenu: HTMLDialogElement = $state()!;
 let addMenu: HTMLDialogElement = $state()!;
 
-let editingCard: number = $state(0);
+let cardid = $state(-1);
+let delid = $state(-1);
+let front = $state("");
+let back = $state("");
+let searchterm = $state("");
+
+async function addcard() {
+    setController.setAddCard(set.id, front.trim(), back.trim());
+    set = await setController.getSet(set.id);
+    addMenu.close();
+}
+
+async function editcard() {
+    setController.setEditCard(set.id, cardid, front.trim(), back.trim());
+    set = await setController.getSet(set.id);
+    editMenu.close();
+}
+
+async function deletecard() {
+    setController.setDelCard(set.id, delid);
+    set = await setController.getSet(set.id);
+    delid = -1;
+}
 </script>
 
 <svelte:head>
-    <title>mimoli -- {data.set.name}</title>
+    <title>mimoli -- {set.name}</title>
 </svelte:head>
 
-<Modal bind:modal={editMenu} onclose={() => {}} title="Editing card">
-    <form action="?/update" method="POST">
+<Modal
+    bind:modal={addMenu}
+    onclose={() => {
+        front = "";
+        back = "";
+    }}
+    title="Adding card"
+>
+    <form onsubmit={addcard}>
         <label>
             front
-            <textarea name="front">{editingCard >= 0 ? data.set.cards[editingCard].front : ""}</textarea>
+            <textarea bind:value={front} required></textarea>
         </label>
         <label>
             back
-            <textarea name="back">{editingCard >= 0 ? data.set.cards[editingCard].back : ""}</textarea>
+            <textarea bind:value={back} required></textarea>
         </label>
-        <input type="text" name="card-index" style="display:none;" bind:value={editingCard}>
-        <input type="text" name="set-id" style="display:none;" bind:value={data.set.id}>
-        <button>save</button>
+        <button>add</button>
     </form>
 </Modal>
-<Modal bind:modal={addMenu} onclose={() => {}} title="Adding card">
-    <form action="?/add" method="POST">
+<Modal
+    bind:modal={editMenu}
+    onclose={() => {
+        front = "";
+        back = "";
+    }}
+    title="Editing card"
+>
+    <form onsubmit={editcard}>
         <label>
             front
-            <textarea name="front"></textarea>
+            <textarea bind:value={front}></textarea>
         </label>
         <label>
             back
-            <textarea name="back"></textarea>
+            <textarea bind:value={back}></textarea>
         </label>
-        <input type="text" name="set-id" style="display:none;" bind:value={data.set.id}>
         <button>save</button>
     </form>
 </Modal>
 <header>
-    <h1>{data.set.name} cards</h1>
+    <a href="/">
+        <Icon name="arrow_back" size={32} />
+    </a>
+    <h1>{set.name} cards</h1>
 </header>
 <ul>
-    {#each cards as card, i}
+    click to edit
+    {#each set.cards.filter(v => v.front.includes(searchterm) || v.back.includes(searchterm)) as card, i}
         <li>
-            <p>{card.front}</p>
-            <p>{card.back}</p>
-            <button onclick={() => {
-                editMenu.showModal();
-                editingCard = i;
-            }}>
-                <Icon name="edit" size={32} />
+            <button
+                class="edit-button"
+                onclick={() => {
+                    cardid = i;
+                    delid = -1;
+                    front = card.front;
+                    back = card.back;
+                    editMenu.showModal();
+                }}
+            >
+                <p>{card.front}</p>
+                <p>{card.back}</p>
             </button>
+            <div>
+                {#if delid === i}
+                    <button
+                        class="del-button"
+                        onclick={() => deletecard()}>
+                        <Icon name="question_mark" size={32} />
+                    </button>
+                {:else}
+                <button class="del-button" onclick={() => delid = i}>
+                    <Icon name="delete" size={32} />
+                </button>
+                {/if}
+            </div>
         </li>
     {/each}
 </ul>
 <footer>
-    <input type="text" placeholder="search..."/>
-    <button onclick={() => addMenu.showModal() }>
+    <input type="text" placeholder="search..." bind:value={searchterm}/>
+    <button onclick={() => addMenu.showModal()}>
         <Icon name="add" size={32} />
     </button>
 </footer>
 
 <style>
-label {
-    display: grid;
-    gap: 0.25rem;
-}
+    label {
+        display: grid;
+        gap: 0.25rem;
+    }
 
-textarea {
-    background-color: var(--clr-neutral-700);
-    border: 0;
-    padding: 1rem;
-}
+    textarea {
+        background-color: var(--clr-neutral-700);
+        border: 0;
+        padding: 1rem;
+    }
 
-form button {
-    background-color: var(--clr-accent);
-    color: var(--clr-bg);
-    border: 0;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    cursor: pointer;
-}
+    form button {
+        background-color: var(--clr-accent);
+        color: var(--clr-bg);
+        border: 0;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+    }
 
-form {
-    display: grid;
-    gap: 1rem;
-}
+    form {
+        display: grid;
+        gap: 1rem;
+    }
 
-header {
-    padding-inline: 1.5rem;
-}
+    header {
+        padding-inline: 1.5rem;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        align-items: center;
+        gap: 1rem;
+    }
 
-ul {
-    margin: 0;
-    padding: 1rem;
-    list-style-type: none;
-    overflow: scroll;
-}
+    a {
+        color: inherit;
+        text-decoration: none;
+        display: grid;
+        place-items: center;
+    }
 
-li {
-    background-color: var(--clr-surface);
-    padding: 1rem;
-    border-radius: 1rem;
+    ul {
+        margin: 0;
+        padding: 1rem;
+        list-style-type: none;
+        overflow: scroll;
+    }
 
-    display: grid;
-    grid-template-columns: 1fr auto;
-    grid-template-rows: repeat(2, 1fr);
-    align-items: center;
-}
+    li {
+        background-color: var(--clr-surface);
+        border-radius: 1rem;
 
-li + li {
-    margin-top: 1rem;
-}
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+    }
 
-p {
-    margin: 0;
-    grid-column: 1;
-}
+    li + li {
+        margin-top: 1rem;
+    }
 
-p:first-of-type {
-    font-weight: 700;
-}
+    li p {
+        margin: 0;
+    }
 
-li button {
-    grid-column: 2;
-    grid-row: 1 / 3;
-    background-color: inherit;
-    color: inherit;
-    aspect-ratio: 1 / 1;
-    display: grid;
-    place-items: center;
-    border: 0;
-    padding: 0;
-    margin-right: 0.25rem;
-    cursor: pointer;
-}
+    li p:first-of-type {
+        font-weight: 700;
+    }
+
+    li button {
+        --_border-radius: 1rem;
+        padding: 1rem;
+    }
+
+    li .edit-button {
+        border-radius: var(--_border-radius) 0 0 var(--_border-radius);
+        text-align: left;
+        background-color: inherit;
+        border: 0;
+        color: inherit;
+        cursor: pointer;
+    }
+
+    li .del-button {
+        border-radius: 0 var(--_border-radius) var(--_border-radius) 0;
+        background-color: inherit;
+        color: inherit;
+        aspect-ratio: 1 / 1;
+        display: grid;
+        place-items: center;
+        padding: 1.5rem;
+        border: 0;
+        cursor: pointer;
+    }
+
+    li button:hover {
+        background-color: var(--clr-accent-darker);
+    }
 </style>

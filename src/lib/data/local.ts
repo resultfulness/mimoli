@@ -13,20 +13,19 @@ export default class SetControllerLocal implements SetController {
 
     private async opendb(): Promise<IDBDatabase> {
         return new Promise((res, rej) => {
-            const request = window.indexedDB.open("mimoli", 1);
+            const request = window.indexedDB.open("mimoli", 2);
 
-            request.onerror = (e) => {
-                rej(e);
-            };
+            request.onerror = (e) => rej(e);
             request.onsuccess = (e) => {
                 res(e.target?.result);
             }
             request.onupgradeneeded = (e) => {
-                const db = e.target?.result;
-                db.createObjectStore(
+                const db: IDBDatabase = e.target?.result;
+                const store = db.createObjectStore(
                     "learnsets",
                     { autoIncrement: true, keyPath: "id" }
                 );
+                store.createIndex("name", "name", { unique: true });
             }
         });
     }
@@ -38,6 +37,7 @@ export default class SetControllerLocal implements SetController {
                 .objectStore("learnsets")
                 .add({ name: setname, cards: [] });
 
+            request.onerror = (e) => rej(e);
             request.onsuccess = (e) => {
                 res(e.target?.result);
             }
@@ -50,6 +50,7 @@ export default class SetControllerLocal implements SetController {
                 .objectStore("learnsets")
                 .delete(id);
 
+            request.onerror = (e) => rej(e);
             request.onsuccess = (e) => res();
         })
     }
@@ -60,6 +61,7 @@ export default class SetControllerLocal implements SetController {
                 .objectStore("learnsets")
                 .get(id);
 
+            request.onerror = (e) => rej(e);
             request.onsuccess = (e) => {
                 res(e.target?.result);
             }
@@ -72,6 +74,7 @@ export default class SetControllerLocal implements SetController {
                 .objectStore("learnsets")
                 .getAll();
 
+            request.onerror = (e) => rej(e);
             request.onsuccess = (e) => {
                 const sets: LearnSet[] = e.target?.result;
                 const setOverviews: LearnSetOverview[] = sets.map(v => {

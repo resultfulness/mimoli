@@ -48,9 +48,13 @@ export default class SetControllerMock implements SetController {
     
     counter: number = 7;
 
-    async addSet(newSet: LearnSet): Promise<number> {
+    async addSet(setname: string): Promise<number> {
         return new Promise(res => {
-            this.data.set(++this.counter, newSet)
+            this.data.set(++this.counter, {
+                name: setname,
+                cards: [],
+                id: this.counter,
+            })
             res(this.counter);
         });
     }
@@ -82,13 +86,13 @@ export default class SetControllerMock implements SetController {
             }));
         });
     }
-    async setAddCard(setId: number, newCard: LearnCard): Promise<void> {
+    async setAddCard(setId: number, front: string, back: string): Promise<void> {
         return new Promise(async (res, rej) => {
             const set = await this.getSet(setId);
             if (!set) {
                 rej();
             }
-            set.cards.push(newCard);
+            set.cards.push({ front, back });
             this.data.set(setId, set);
             res();
         });
@@ -99,18 +103,18 @@ export default class SetControllerMock implements SetController {
             if (!set) {
                 rej();
             }
-            set.cards = set.cards.filter(v => v.id !== cardId);
+            set.cards = set.cards.filter((v, i) => i !== cardId);
             this.data.set(setId, set);
             res();
         })
     }
-    async setEditCard(setId: number, cardId: number, newCard: LearnCard): Promise<void> {
+    async setEditCard(setId: number, cardId: number, front: string, back: string): Promise<void> {
         return new Promise(async (res, rej) => {
             const set = await this.getSet(setId);
             if (!set) {
                 rej();
             }
-            set.cards[cardId] = newCard;
+            set.cards[cardId] = { front, back };
             this.data.set(setId, set);
             res();
         });
