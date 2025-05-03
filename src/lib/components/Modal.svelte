@@ -48,7 +48,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 4rem;
+    gap: 1rem;
     margin-bottom: 1rem;
     word-break: break-word;
 }

@@ -2,7 +2,6 @@
 import Icon from "$lib/components/Icon.svelte";
 import setController from "$lib/data";
 import Modal from "$lib/components/Modal.svelte";
-import type { LearnSetOverview } from "$lib/types";
 import type { PageProps } from "./$types";
 import Input from "$lib/components/Input.svelte";
 import Button from "$lib/components/Button.svelte";
@@ -10,11 +9,8 @@ import Button from "$lib/components/Button.svelte";
 const { data }: PageProps = $props();
 let sets = $state(data.sets);
 
-let setMenu: HTMLDialogElement = $state()!;
 let addMenu: HTMLDialogElement = $state()!;
-let delButton: HTMLButtonElement;
 
-let setMenuSet: LearnSetOverview = $state({ id: -1, name: "foo" });
 let newsetname = $state("");
 let errormessage = $state("");
 let searchterm = $state("");
@@ -37,12 +33,6 @@ async function createset() {
         return;
     }
 }
-
-async function deleteset() {
-    await setController.delSet(setMenuSet.id);
-    sets = await setController.getSetOverviews();
-    setMenu.close();
-}
 </script>
 
 <svelte:head>
@@ -63,17 +53,10 @@ async function deleteset() {
             (v) => v.name.toLowerCase().includes(searchterm.toLowerCase())
         ) as { id, name }}
             <li>
-                <button
-                    onclick={() => {
-                        setMenuSet = { id, name };
-                        setMenu.showModal();
-                    }}
-                >
-                    <h2>
-                        {name}
-                    </h2>
+                <a href="/app/{id}/quiz">
+                    <h2>{name}</h2>
                     <Icon name="chevron_right" size={32} />
-                </button>
+                </a>
             </li>
         {/each}
     </ul>
@@ -99,49 +82,21 @@ margin: 1rem;
     title="New set"
 >
     <form onsubmit={createset} class="add-form">
-        <label>
-            name
-            <Input type="text" bind:value={newsetname} --outline={errormessage.length > 0 ? "1px solid var(--clr-error)" : "none"} />
-        </label>
+        <Input
+            labeltext="name"
+            type="text"
+            bind:value={newsetname}
+            --outline={errormessage.length > 0 ? "1px solid var(--clr-error)" : "none"} />
         <p>{errormessage}</p>
         <Button>create</Button>
     </form>
 </Modal>
-<Modal
-    bind:modal={setMenu}
-    onclose={() => (delButton.style.display = "none")}
-    title={setMenuSet.name}
->
-    <div class="modal">
-        <a href="/app/set/{setMenuSet.id}/test" class="set-menu-option">
-            <Icon name="quiz" />
-            test
-        </a>
-        <form onsubmit={deleteset}>
-            <button
-                type="button"
-                onclick={() => (delButton.style.display = "grid")}
-                class="set-menu-option"
-            >
-                <Icon name="delete" />
-                delete
-            </button>
-            <button
-                class="set-menu-option confirm-delete-button"
-                bind:this={delButton}
-            >
-                <Icon name="question_mark" />
-                confirm
-            </button>
-        </form>
-        <a href="/app/set/{setMenuSet.id}" class="set-menu-option">
-            <Icon name="edit" />
-            edit
-        </a>
-    </div>
-</Modal>
 
 <style>
+header, main {
+    padding-inline: 1rem;
+}
+
 h2 {
     white-space: nowrap;
     overflow: hidden;
@@ -169,7 +124,7 @@ li + li {
     margin-top: 1rem;
 }
 
-li button {
+li a {
     padding: 0.25rem 1rem;
     width: 100%;
     text-decoration: none;
@@ -183,59 +138,10 @@ li button {
     cursor: pointer;
 }
 
-.modal {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.2rem;
-    border-radius: 1rem;
-    overflow: hidden;
-}
-
-.modal .set-menu-option:first-of-type {
-    grid-column: span 2;
-}
-
-.modal .set-menu-option {
-    padding: 1rem;
-    cursor: pointer;
-    display: grid;
-    place-items: center;
-    border: 0;
-    background-color: var(--clr-s1);
-    color: inherit;
-    text-decoration: none;
-}
-
-.modal .set-menu-option:hover {
-    background-color: var(--clr-s2);
-}
-
-.modal form {
-    position: relative;
-}
-
-.modal form button {
-    position: absolute;
-    inset: 0;
-}
-
-.modal .confirm-delete-button {
-    display: none;
-    background-color: var(--clr-error);
-}
-
-.modal .confirm-delete-button:hover {
-    background-color: var(--clr-error);
-}
-
 .add-form {
     display: grid;
     gap: 0.5rem;
     text-indent: 0.25rem;
-}
-.add-form label {
-    display: grid;
-    gap: 0.5rem;
 }
 .add-form p {
     margin: 0;

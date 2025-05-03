@@ -27,4 +27,9 @@ button {
 button:hover {
   background-color: var(--clr-main-hover);
 }
+
+button:focus {
+  outline: 1px solid var(--clr-main);
+  outline-offset: 2px;
+}
 </style>

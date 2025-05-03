@@ -11,10 +11,9 @@ import "../app.css";
     position: relative;
     max-width: 640px;
     margin-inline: auto;
-    padding-inline: 1rem;
     height: 100vh;
     height: 100dvh;
     display: grid;
-    grid-template-rows: auto 1fr;
+    grid-template-rows: auto 1fr auto;
 }
 </style>

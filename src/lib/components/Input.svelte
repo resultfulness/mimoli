@@ -5,14 +5,27 @@ interface InputProps {
   value: string;
   style?: string;
   required?: boolean;
+  labeltext?: string;
 }
 
-let { type, placeholder, value = $bindable(), style, required }: InputProps = $props();
+let { type, placeholder, value = $bindable(), style, required, labeltext }: InputProps = $props();
 </script>
 
-<input {type} {placeholder} bind:value {style} {required} />
+{#if labeltext}
+  <label>
+    {labeltext}
+    <input {type} {placeholder} bind:value {style} {required} />
+  </label>
+{:else}
+  <input {type} {placeholder} bind:value {style} {required} />
+{/if}
 
 <style>
+label {
+    display: grid;
+    gap: 0.25rem;
+}
+
 input {
   background-color: var(--clr-s1);
   color: var(--clr-fg);
