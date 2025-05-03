@@ -9,18 +9,23 @@ let { data }: LayoutProps = $props();
 
 let setname = $state(data.set.name);
 let showConfirm = $state(false);
+
+async function renameset() {
+    await setController.renameSet(data.set.id, setname);
+    window.location.reload();
+}
 </script>
 
 <main>
-    <h2>Rename set</h2>
     <section>
-        <form action="">
+        <h2>Rename set</h2>
+        <form onsubmit={renameset}>
             <Input type="text" bind:value={setname} />
             <Button>save</Button>
         </form>
     </section>
-    <h2>Delete set</h2>
     <section>
+        <h2>Delete set</h2>
         {#if !showConfirm}
             <Button
                 onclick={() => {
@@ -44,6 +49,10 @@ let showConfirm = $state(false);
 </main>
 
 <style>
+h2 {
+    margin: 0;
+}
+
 form {
     display: grid;
     grid-template-columns: 1fr auto;
@@ -57,5 +66,6 @@ main {
 section {
     display: grid;
     gap: 1rem;
+    margin-bottom: 2rem;
 }
 </style>

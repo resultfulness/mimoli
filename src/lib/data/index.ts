@@ -5,6 +5,7 @@ export interface SetController {
     addSet: (setname: string) => Promise<number>;
     delSet: (id: number) => Promise<void>;
     getSet: (id: number) => Promise<LearnSet>;
+    renameSet: (id: number, setname: string) => Promise<void>;
     getSetOverviews: () => Promise<LearnSetOverview[]>;
     setAddCard: (setId: number, front: string, back: string) => Promise<void>;
     setDelCard: (setId: number, cardId: number) => Promise<void>;

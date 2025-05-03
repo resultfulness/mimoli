@@ -43,23 +43,27 @@ async function createset() {
     <h1>Set list</h1>
 </header>
 <main>
-    <Input
-        type="text"
-        placeholder="search..."
-        bind:value={searchterm}
-        style={`width: 100%`} />
-    <ul>
-        {#each sets.filter(
-            (v) => v.name.toLowerCase().includes(searchterm.toLowerCase())
-        ) as { id, name }}
-            <li>
-                <a href="/app/{id}/quiz">
-                    <h2>{name}</h2>
-                    <Icon name="chevron_right" size={32} />
-                </a>
-            </li>
-        {/each}
-    </ul>
+    {#if sets.length === 0}
+        <p>no sets!</p>
+    {:else}
+        <Input
+            type="text"
+            placeholder="search..."
+            bind:value={searchterm}
+            style={`width: 100%`} />
+        <ul>
+            {#each sets.filter(
+                (v) => v.name.toLowerCase().includes(searchterm.toLowerCase())
+            ) as { id, name }}
+                <li>
+                    <a href="/app/{id}/quiz">
+                        <h2>{name}</h2>
+                        <Icon name="chevron_right" size={32} />
+                    </a>
+                </li>
+            {/each}
+        </ul>
+    {/if}
     <Button
         onclick={() => addMenu.showModal()}
         style={`
@@ -95,6 +99,11 @@ margin: 1rem;
 <style>
 header, main {
     padding-inline: 1rem;
+}
+
+main p {
+    text-align: center;
+    color: gray;
 }
 
 h2 {

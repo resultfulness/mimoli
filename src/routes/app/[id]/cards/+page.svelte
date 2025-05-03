@@ -42,41 +42,45 @@ async function deletecard() {
 </svelte:head>
 
 <main>
+    {#if set.cards.length === 0}
+        <p>no cards!</p>
+    {:else}
     <ul>
-        {#each set.cards.filter(
-            (v) => v.front.toLowerCase().includes(searchterm.toLowerCase()) ||
-                v.back.toLowerCase().includes(searchterm.toLowerCase())
-        ) as card, i}
-            <li>
-                <button
-                    class="edit-button"
-                    onclick={() => {
-                        cardid = i;
-                        delid = -1;
-                        front = card.front;
-                        back = card.back;
-                        editMenu.showModal();
-                    }}
-                >
-                    <p>{card.front}</p>
-                    <p>{card.back}</p>
-                </button>
-                <div>
-                    {#if delid === i}
-                        <button
-                            class="del-button"
-                            onclick={() => deletecard()}>
-                            <Icon name="question_mark" size={32} />
-                        </button>
-                    {:else}
-                        <button class="del-button" onclick={() => delid = i}>
-                            <Icon name="delete" size={32} />
-                        </button>
-                    {/if}
-                </div>
-            </li>
-        {/each}
+            {#each set.cards.filter(
+                (v) => v.front.toLowerCase().includes(searchterm.toLowerCase()) ||
+                    v.back.toLowerCase().includes(searchterm.toLowerCase())
+            ) as card, i}
+                <li>
+                    <button
+                        class="edit-button"
+                        onclick={() => {
+                            cardid = i;
+                            delid = -1;
+                            front = card.front;
+                            back = card.back;
+                            editMenu.showModal();
+                        }}
+                    >
+                        <p>{card.front}</p>
+                        <p>{card.back}</p>
+                    </button>
+                    <div>
+                        {#if delid === i}
+                            <button
+                                class="del-button"
+                                onclick={() => deletecard()}>
+                                <Icon name="question_mark" size={32} />
+                            </button>
+                        {:else}
+                            <button class="del-button" onclick={() => delid = i}>
+                                <Icon name="delete" size={32} />
+                            </button>
+                        {/if}
+                    </div>
+                </li>
+            {/each}
     </ul>
+    {/if}
     <Button
         onclick={() => addMenu.showModal()}
         style={`
@@ -138,6 +142,11 @@ margin: 1rem;
 main {
     position: relative;
     padding-inline: 1rem;
+}
+
+main p {
+    text-align: center;
+    color: gray;
 }
 
 form {

@@ -67,6 +67,26 @@ export default class SetControllerLocal implements SetController {
             }
         })
     }
+
+    async renameSet(id: number, setname: string): Promise<void> {
+        const db = await this.getdb();
+        return new Promise((res, rej) => {
+            const store = db.transaction("learnsets", "readwrite")
+                .objectStore("learnsets");
+            const request = store.get(id);
+            request.onerror = (e) => rej(e);
+            request.onsuccess = (e) => {
+                const set: LearnSet = e.target?.result;
+
+                set.name = setname;
+
+                const updateRequest = store.put(set);
+                updateRequest.onerror = (e) => rej(e);
+                updateRequest.onsuccess = (e) => res();
+            }
+        });
+    }
+
     async getSetOverviews(): Promise<LearnSetOverview[]> {
         const db = await this.getdb();
         return new Promise((res, rej) => {
