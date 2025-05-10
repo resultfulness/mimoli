@@ -1,4 +1,5 @@
 <script lang="ts">
+import { invalidateAll } from "$app/navigation";
 import Button from "$lib/components/Button.svelte";
 import Icon from "$lib/components/Icon.svelte";
 import Modal from "$lib/components/Modal.svelte";
@@ -21,19 +22,31 @@ let searchterm = $state("");
 async function addcard() {
     setController.setAddCard(set.id, front.trim(), back.trim());
     set = await setController.getSet(set.id);
+    await invalidateAll();
+    clearform();
+}
+async function addcardnclose() {
+    await addcard();
     addMenu.close();
 }
 
 async function editcard() {
     setController.setEditCard(set.id, cardid, front.trim(), back.trim());
     set = await setController.getSet(set.id);
+    await invalidateAll();
     editMenu.close();
 }
 
 async function deletecard() {
     setController.setDelCard(set.id, delid);
     set = await setController.getSet(set.id);
+    await invalidateAll();
     delid = -1;
+}
+
+function clearform() {
+    front = "";
+    back = "";
 }
 </script>
 
@@ -43,7 +56,7 @@ async function deletecard() {
 
 <main>
     {#if set.cards.length === 0}
-        <p>no cards!</p>
+        <p class="empty-list-info">no cards!</p>
     {:else}
     <ul>
             {#each set.cards.filter(
@@ -68,6 +81,7 @@ async function deletecard() {
                         {#if delid === i}
                             <button
                                 class="del-button"
+                                style="background-color: var(--clr-error);"
                                 onclick={() => deletecard()}>
                                 <Icon name="question_mark" size={32} />
                             </button>
@@ -95,13 +109,10 @@ margin: 1rem;
 </main>
 <Modal
     bind:modal={addMenu}
-    onclose={() => {
-        front = "";
-        back = "";
-    }}
+    onclose={clearform}
     title="Adding a card"
 >
-    <form onsubmit={addcard}>
+    <form onsubmit={addcardnclose}>
         <Textarea
             bind:value={front}
             required
@@ -112,15 +123,13 @@ margin: 1rem;
             required
             labeltext="back"
         ></Textarea>
-        <Button>add</Button>
+        <Button type="button" onclick={addcard}>add</Button>
+        <Button>add & close</Button>
     </form>
 </Modal>
 <Modal
     bind:modal={editMenu}
-    onclose={() => {
-        front = "";
-        back = "";
-    }}
+    onclose={clearform}
     title="Editing a card"
 >
     <form onsubmit={editcard}>
@@ -144,9 +153,9 @@ main {
     padding-inline: 1rem;
 }
 
-main p {
+.empty-list-info {
     text-align: center;
-    color: gray;
+    color: var(--clr-muted);
 }
 
 form {

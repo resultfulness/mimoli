@@ -1,21 +1,19 @@
 <script lang="ts">
-interface ButtonProps {
+interface AnchorProps {
   children: any;
-  onclick?: () => void;
   style?: string;
-  type?: "button" | "submit" | "reset" | null | undefined;
-  disabled?: boolean;
+  href: string;
 }
 
-let { children, onclick, style, type, disabled }: ButtonProps = $props();
+let { children, style, href }: AnchorProps = $props();
 </script>
 
-<button {onclick} {style} {type} {disabled}>
+<a {style} {href}>
   {@render children()}
-</button>
+</a>
 
 <style>
-button {
+a {
   display: grid;
   place-items: center;
   border-radius: 1rem;
@@ -24,18 +22,15 @@ button {
   color: var(--clr-bg);
   padding: 0.5rem;
   cursor: pointer;
+  text-decoration: none;
 }
 
-button:hover {
+a:hover {
   background-color: var(--clr-main-hover);
 }
 
-button:focus {
+a:focus {
   outline: 1px solid var(--clr-main);
   outline-offset: 2px;
-}
-
-button:disabled {
-  background-color: var(--clr-muted);
 }
 </style>

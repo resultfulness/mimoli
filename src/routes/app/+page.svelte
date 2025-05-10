@@ -103,7 +103,7 @@ header, main {
 
 main p {
     text-align: center;
-    color: gray;
+    color: var(--clr-muted);
 }
 
 h2 {

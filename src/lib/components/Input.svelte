@@ -38,4 +38,8 @@ input {
 input:focus {
   outline: 1px solid var(--clr-main);
 }
+
+input::placeholder {
+  color: var(--clr-muted);
+}
 </style>

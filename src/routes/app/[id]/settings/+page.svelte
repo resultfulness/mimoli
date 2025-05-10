@@ -9,10 +9,15 @@ let { data }: LayoutProps = $props();
 
 let setname = $state(data.set.name);
 let showConfirm = $state(false);
+let errormessage = $state("");
 
 async function renameset() {
-    await setController.renameSet(data.set.id, setname);
-    window.location.reload();
+    try {
+        await setController.renameSet(data.set.id, setname);
+        window.location.reload();
+    } catch (e) {
+        errormessage = "set with this name already exists";
+    }
 }
 </script>
 
@@ -21,7 +26,8 @@ async function renameset() {
         <h2>Rename set</h2>
         <form onsubmit={renameset}>
             <Input type="text" bind:value={setname} />
-            <Button>save</Button>
+            <p class="errormessage">{errormessage}</p>
+            <Button disabled={setname === data.set.name}>save</Button>
         </form>
     </section>
     <section>
@@ -55,8 +61,11 @@ h2 {
 
 form {
     display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 1rem;
+}
+
+.errormessage {
+    margin: 0.5rem;
+    color: var(--clr-error);
 }
 
 main {

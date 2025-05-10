@@ -7,35 +7,43 @@ let { data, children }: LayoutProps = $props();
 </script>
 
 <header>
-    <a href="/app">
-        <Icon name="arrow_back" size={32} />
-    </a>
+    {#if page.url.pathname.endsWith("flip")}
+        <a href={`/app/${data.set.id}/quiz`}>
+            <Icon name="arrow_back" size={32} />
+        </a>
+    {:else}
+        <a href="/app">
+            <Icon name="arrow_back" size={32} />
+        </a>
+    {/if}
     <h1>{data.set.name}</h1>
 </header>
 {@render children()}
-<nav>
-    <a
-        href="/app/{data.set.id}/quiz"
-        class:active={page.url.pathname.endsWith("quiz")}
-    >
-        <Icon name="quiz" />
-        <span>quiz</span>
-    </a>
-    <a
-        href="/app/{data.set.id}/cards"
-        class:active={page.url.pathname.endsWith("cards")}
-    >
-        <Icon name="edit_note" />
-        <span>cards</span>
-    </a>
-    <a
-        href="/app/{data.set.id}/settings"
-        class:active={page.url.pathname.endsWith("settings")}
-    >
-        <Icon name="settings" />
-        <span>settings</span>
-    </a>
-</nav>
+{#if !page.url.pathname.endsWith("flip")}
+    <nav>
+        <a
+            href="/app/{data.set.id}/quiz"
+            class:active={page.url.pathname.endsWith("quiz")}
+        >
+            <Icon name="quiz" />
+            <span>quiz</span>
+        </a>
+        <a
+            href="/app/{data.set.id}/cards"
+            class:active={page.url.pathname.endsWith("cards")}
+        >
+            <Icon name="edit_note" />
+            <span>cards</span>
+        </a>
+        <a
+            href="/app/{data.set.id}/settings"
+            class:active={page.url.pathname.endsWith("settings")}
+        >
+            <Icon name="settings" />
+            <span>settings</span>
+        </a>
+    </nav>
+{/if}
 
 <style>
 h1 {

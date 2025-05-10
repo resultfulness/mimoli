@@ -1,16 +1,17 @@
 :root[data-theme="dark"] {
-    --clr-main: #8bbe1b;
-    --clr-main-hover: #b1e441;
+    --clr-main: #b05fd8;
+    --clr-main-hover: #c284e1;
 
-    --clr-bg: #0d0f0b;
-    --clr-fg: #f8fdef;
+    --clr-bg: #0c0411;
+    --clr-fg: #f6edfb;
 
-    --clr-s0: #1f2612;
-    --clr-s1: #293117;
-    --clr-s2: #323e17;
+    --clr-s0: #2d0c3c;
+    --clr-s1: #3c1050;
+    --clr-s2: #4b1464;
 
-    --clr-error: #be4e1b;
-    --clr-warning: #bea01b;
+    --clr-error: #dc6f94;
+    --clr-warning: #dcb86f;
+    --clr-muted: #6f597b;
 }
 
 body {
