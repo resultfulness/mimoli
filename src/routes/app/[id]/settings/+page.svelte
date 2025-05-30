@@ -1,6 +1,7 @@
 <script lang="ts">
-import { goto } from "$app/navigation";
+import { goto, invalidateAll } from "$app/navigation";
 import Button from "$lib/components/Button.svelte";
+import FileSaver from "file-saver"
 import Input from "$lib/components/Input.svelte";
 import setController from "$lib/data";
 import type { LayoutProps } from "../$types";
@@ -18,6 +19,22 @@ async function renameset() {
     } catch (e) {
         errormessage = "set with this name already exists";
     }
+}
+
+async function deleteset() {
+    setController.delSet(data.set.id);
+    await invalidateAll();
+    goto("/");
+}
+
+async function exportdata() {
+    const set = { name: data.set.name, cards: data.set.cards };
+    const filename = `mimoli-set-${set.name.replace(" ", "_")}-${new Date().toISOString()}.json`;
+    const file = new Blob(
+        [JSON.stringify(set, null, 4)],
+        { type: "application/json" }
+    );
+    FileSaver.saveAs(file, filename);
 }
 </script>
 
@@ -42,15 +59,18 @@ async function renameset() {
             </Button>
         {:else}
             <Button
-                onclick={() => {
-                    setController.delSet(data.set.id);
-                    goto("/");
-                }}
+                onclick={deleteset}
                 style="background-color: var(--clr-error);"
             >
                 are you sure?
             </Button>
         {/if}
+    </section>
+    <section>
+        <h2>Export set</h2>
+        <Button onclick={exportdata}>
+            download set export file
+        </Button>
     </section>
 </main>
 

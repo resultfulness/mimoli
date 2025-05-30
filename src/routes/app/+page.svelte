@@ -5,6 +5,7 @@ import Modal from "$lib/components/Modal.svelte";
 import type { PageProps } from "./$types";
 import Input from "$lib/components/Input.svelte";
 import Button from "$lib/components/Button.svelte";
+import type { LearnSetImport } from "$lib/types";
 
 const { data }: PageProps = $props();
 let sets = $state(data.sets);
@@ -33,6 +34,48 @@ async function createset() {
         return;
     }
 }
+
+let files: FileList | undefined = $state();
+
+async function importdata() {
+    if (!files) { return; }
+    const datastring = await files[0].text()
+
+    let data: LearnSetImport;
+    try {
+        data = JSON.parse(datastring);
+    } catch (_) {
+        throw new Error("import file not in JSON format");
+    }
+
+    if (data.cards.constructor !== Array) {
+        throw new Error("invalid import file format");
+    }
+
+    if (typeof data.name !== "string") {
+        throw new Error("invalid import file format");
+    }
+
+    const requiredkeys = ["name", "cards"];
+    const datakeys = Object.keys(data);
+    for (const key of requiredkeys) {
+        if (!datakeys.includes(key)) {
+            throw new Error("invalid import file format")
+        }
+    }
+
+    let id: number;
+    try {
+        id = await setController.addSet(data.name);
+    } catch (e) {
+        throw new Error("this set already exists!");
+    }
+    for (const card of data.cards) {
+        await setController.setAddCard(id, card.front, card.back);
+    }
+
+    window.location.reload();
+}
 </script>
 
 <svelte:head>
@@ -56,7 +99,7 @@ async function createset() {
                 (v) => v.name.toLowerCase().includes(searchterm.toLowerCase())
             ) as { id, name }}
                 <li>
-                    <a href="/app/{id}/quiz">
+                    <a href="/app/{id}/cards">
                         <h2>{name}</h2>
                         <Icon name="chevron_right" size={32} />
                     </a>
@@ -94,9 +137,47 @@ margin: 1rem;
         <p>{errormessage}</p>
         <Button>create</Button>
     </form>
+    <div class="separator">or</div>
+    <label class="import-entry">
+        import set from file
+        <input
+            type="file"
+            id="import"
+            name="import"
+            accept="application/json"
+            style:display="none"
+            onchange={() => {
+                importdata().catch(e => alert(e?.toString()))
+            }}
+            bind:files
+        />
+    </label>
 </Modal>
 
 <style>
+.separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin-block: 0.5rem;
+    color: var(--clr-muted);
+}
+
+.separator::before,
+.separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--clr-muted);
+}
+
+.separator:not(:empty)::before {
+    margin-right: .5em;
+}
+
+.separator:not(:empty)::after {
+    margin-left: .5em;
+}
+
 header, main {
     padding-inline: 1rem;
 }
@@ -155,5 +236,28 @@ li a {
 .add-form p {
     margin: 0;
     color: var(--clr-error);
+}
+
+.import-entry {
+  display: grid;
+  place-items: center;
+  border-radius: 1rem;
+  border: 0;
+  background-color: var(--clr-main);
+  color: var(--clr-bg);
+  padding: 0.5rem;
+  cursor: pointer;
+}
+.import-entry:hover {
+  background-color: var(--clr-main-hover);
+}
+
+.import-entry:focus {
+  outline: 1px solid var(--clr-main);
+  outline-offset: 2px;
+}
+
+.import-entry:disabled {
+  background-color: var(--clr-muted);
 }
 </style>

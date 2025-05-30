@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      file-saver:
+        specifier: ^2.0.5
+        version: 2.0.5
     devDependencies:
       '@sveltejs/adapter-auto':
         specifier: ^4.0.0
@@ -409,6 +413,9 @@ packages:
     peerDependenciesMeta:
       picomatch:
         optional: true
+
+  file-saver@2.0.5:
+    resolution: {integrity: sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==}
 
   fsevents@2.3.3:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
@@ -821,6 +828,8 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.0
 
   fdir@6.4.3: {}
+
+  file-saver@2.0.5: {}
 
   fsevents@2.3.3:
     optional: true

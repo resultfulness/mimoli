@@ -151,6 +151,7 @@ margin: 1rem;
 main {
     position: relative;
     padding-inline: 1rem;
+    overflow: scroll;
 }
 
 .empty-list-info {
@@ -168,7 +169,6 @@ ul {
     margin: 0;
     padding: 0;
     list-style-type: none;
-    overflow: scroll;
 }
 
 li {

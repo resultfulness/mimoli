@@ -22,18 +22,18 @@ let { data, children }: LayoutProps = $props();
 {#if !page.url.pathname.endsWith("flip")}
     <nav>
         <a
-            href="/app/{data.set.id}/quiz"
-            class:active={page.url.pathname.endsWith("quiz")}
-        >
-            <Icon name="quiz" />
-            <span>quiz</span>
-        </a>
-        <a
             href="/app/{data.set.id}/cards"
             class:active={page.url.pathname.endsWith("cards")}
         >
             <Icon name="edit_note" />
             <span>cards</span>
+        </a>
+        <a
+            href="/app/{data.set.id}/quiz"
+            class:active={page.url.pathname.endsWith("quiz")}
+        >
+            <Icon name="quiz" />
+            <span>quiz</span>
         </a>
         <a
             href="/app/{data.set.id}/settings"

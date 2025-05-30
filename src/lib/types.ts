@@ -6,8 +6,13 @@ export type LearnSetOverview = {
 export type LearnCard = {
 	front: string;
 	back: string;
-}
+};
 
 export type LearnSet = LearnSetOverview & {
 	cards: LearnCard[];
-} 
+};
+
+export type LearnSetImport = {
+	name: string;
+	cards: LearnCard[];
+};

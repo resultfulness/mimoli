@@ -39,6 +39,7 @@ export default class SetControllerLocal implements SetController {
 
             request.onerror = (e) => rej(e);
             request.onsuccess = (e) => {
+                console.log(e.target?.result);
                 res(e.target?.result);
             }
         });
