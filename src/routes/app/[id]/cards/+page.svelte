@@ -95,18 +95,17 @@ function clearform() {
             {/each}
     </ul>
     {/if}
+</main>
     <Button
         onclick={() => addMenu.showModal()}
         style={`
 position: absolute;
-bottom: 0;
-right: 0;
-margin: 1rem;
+bottom: 7rem;
+right: 1rem;
 `}
     >
         <Icon name="add" size={48} />
     </Button>
-</main>
 <Modal
     bind:modal={addMenu}
     onclose={clearform}
@@ -149,8 +148,7 @@ margin: 1rem;
 
 <style>
 main {
-    position: relative;
-    padding-inline: 1rem;
+    padding: 1rem;
     overflow: scroll;
 }
 
