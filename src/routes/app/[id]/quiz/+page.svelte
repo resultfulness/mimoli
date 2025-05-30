@@ -16,7 +16,12 @@ let set = $state(data.set);
         <ul>
             <li>
                 <h2>
-                    <a href={`/app/${set.id}/quiz/flip`}>fliptest</a>
+                    <a href={`/app/${set.id}/quiz/flip`}>flip</a>
+                </h2>
+            </li>
+            <li>
+                <h2>
+                    <a href={`/app/${set.id}/quiz/abcd`}>abcd</a>
                 </h2>
             </li>
         </ul>
@@ -37,7 +42,7 @@ h2 {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-left: 1rem;
+    margin: 0;
     font-weight: 400;
     font-size: 1.25rem;
 }
@@ -59,7 +64,7 @@ li + li {
 }
 
 li a {
-    padding: 0.25rem 1rem;
+    padding: 1rem 2rem;
     width: 100%;
     text-decoration: none;
     color: inherit;
