@@ -2,6 +2,7 @@
 import { invalidateAll } from "$app/navigation";
 import Button from "$lib/components/Button.svelte";
 import Icon from "$lib/components/Icon.svelte";
+import Input from "$lib/components/Input.svelte";
 import Modal from "$lib/components/Modal.svelte";
 import Textarea from "$lib/components/Textarea.svelte";
 import setController from "$lib/data";
@@ -58,6 +59,11 @@ function clearform() {
     {#if set.cards.length === 0}
         <p class="empty-list-info">no cards!</p>
     {:else}
+        <Input
+            type="text"
+            placeholder="search..."
+            bind:value={searchterm}
+            style={`width: 100%`} />
     <ul>
             {#each set.cards.filter(
                 (v) => v.front.toLowerCase().includes(searchterm.toLowerCase()) ||
@@ -165,6 +171,7 @@ form {
 
 ul {
     margin: 0;
+    margin-top: 1rem;
     padding: 0;
     list-style-type: none;
 }
