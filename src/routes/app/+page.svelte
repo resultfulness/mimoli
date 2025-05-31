@@ -18,6 +18,7 @@ let searchterm = $state("");
 
 async function createset() {
     if (newsetname.trim().length === 0) {
+        newsetname = "";
         errormessage = "set name cannot be empty";
         return;
     }

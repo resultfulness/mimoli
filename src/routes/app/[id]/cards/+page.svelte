@@ -19,8 +19,32 @@ let delid = $state(-1);
 let front = $state("");
 let back = $state("");
 let searchterm = $state("");
+let errormessage = $state("");
+let errors = $state([false, false]);
+
+function validatecardinfo() {
+    errors = [false, false];
+
+    if (front.trim().length === 0) {
+        front = "";
+        errors[0] = true;
+        throw new Error("card front cannot be empty");
+    }
+    if (back.trim().length === 0) {
+        back = "";
+        errors[1] = true;
+        throw new Error("card back cannot be empty")
+    }
+}
 
 async function addcard() {
+    try {
+        validatecardinfo()
+    } catch (e) {
+        errormessage = e.message;
+        throw new Error();
+    }
+    
     setController.setAddCard(set.id, front.trim(), back.trim());
     set = await setController.getSet(set.id);
     await invalidateAll();
@@ -32,6 +56,13 @@ async function addcardnclose() {
 }
 
 async function editcard() {
+    try {
+        validatecardinfo()
+    } catch (e) {
+        errormessage = e.message;
+        return;
+    }
+
     setController.setEditCard(set.id, cardid, front.trim(), back.trim());
     set = await setController.getSet(set.id);
     await invalidateAll();
@@ -48,6 +79,8 @@ async function deletecard() {
 function clearform() {
     front = "";
     back = "";
+    errormessage = "";
+    errors = [false, false];
 }
 </script>
 
@@ -120,14 +153,15 @@ right: 1rem;
     <form onsubmit={addcardnclose}>
         <Textarea
             bind:value={front}
-            required
             labeltext="front"
+            --outline={errors[0] ? "1px solid var(--clr-error)" : "none"}
         ></Textarea>
         <Textarea
             bind:value={back}
-            required
             labeltext="back"
+            --outline={errors[1] ? "1px solid var(--clr-error)" : "none"}
         ></Textarea>
+        <p>{errormessage}</p>
         <Button type="button" onclick={addcard}>add</Button>
         <Button>add & close</Button>
     </form>
@@ -140,14 +174,15 @@ right: 1rem;
     <form onsubmit={editcard}>
         <Textarea
             bind:value={front}
-            required
             labeltext="front"
+            --outline={errors[0] ? "1px solid var(--clr-error)" : "none"}
         ></Textarea>
         <Textarea
             bind:value={back}
-            required
             labeltext="back"
+            --outline={errors[1] ? "1px solid var(--clr-error)" : "none"}
         ></Textarea>
+        <p>{errormessage}</p>
         <Button>save</Button>
     </form>
 </Modal>
@@ -225,5 +260,10 @@ li .del-button {
 
 li button:hover {
     background-color: var(--clr-s1);
+}
+
+form p {
+    margin: 0;
+    color: var(--clr-error);
 }
 </style>

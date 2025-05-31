@@ -8,7 +8,7 @@ let i = $state(0);
 let card = $derived(data.set.cards[i]);
 
 let answers: string[] = $state([]);
-let incorrects: boolean[] = $state([]);
+let incorrects: boolean[] = $state([false, false, false, false]);
 let mistakes = $state(0);
 
 onMount(() => genanswers());
@@ -26,7 +26,7 @@ function genanswers() {
 
 function checkanswer(ansindex: number) {
     if (answers[ansindex] === card.back) {
-        incorrects = [];
+        incorrects = [false, false, false, false];
         i++;
         if (i < data.set.cards.length) {
             genanswers();
@@ -48,6 +48,7 @@ function checkanswer(ansindex: number) {
                     class="card"
                     onclick={() => checkanswer(i)}
                     class:incorrect={incorrects[i]}
+                    disabled={incorrects[i]}
                 >
                     {ans}
                 </button>

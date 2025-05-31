@@ -13,8 +13,16 @@ let showConfirm = $state(false);
 let errormessage = $state("");
 
 async function renameset() {
+    if (setname.trim().length === 0) {
+        errormessage = "set name cannot be empty";
+        return;
+    }
+    if (setname.trim().length > 20) {
+        errormessage = "set name can be at most 20 characters";
+        return;
+    }
     try {
-        await setController.renameSet(data.set.id, setname);
+        await setController.renameSet(data.set.id, setname.trim());
         window.location.reload();
     } catch (e) {
         errormessage = "set with this name already exists";
@@ -44,7 +52,7 @@ async function exportdata() {
         <form onsubmit={renameset}>
             <Input type="text" bind:value={setname} />
             <p class="errormessage">{errormessage}</p>
-            <Button disabled={setname === data.set.name}>save</Button>
+            <Button disabled={setname.trim() === data.set.name || setname.trim().length === 0}>save</Button>
         </form>
     </section>
     <section>
