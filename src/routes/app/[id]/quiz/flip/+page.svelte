@@ -32,7 +32,7 @@ function flipcard() {
         <Button style="width: 100%; margin-top: 1rem;" onclick={shownextcard}>next</Button>
     {:else}
         <h2>quiz finished</h2>
-        <img src="/cat.png" alt="quiz finish reward">
+        <img src="/cat.gif" alt="quiz finish reward">
     {/if}
 </main>
 
@@ -58,5 +58,10 @@ h2 {
     border-radius: 1rem;
     font-size: 1.5rem;
     cursor: pointer;
+}
+
+img {
+    display: block;
+    margin-inline: auto;
 }
 </style>

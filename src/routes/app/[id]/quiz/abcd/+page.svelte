@@ -56,7 +56,7 @@ function checkanswer(ansindex: number) {
     {:else}
         <h2>quiz finished</h2>
         <p>{mistakes} mistakes</p>
-        <img src="/cat.png" alt="quiz finish reward">
+        <img src="/cat.gif" alt="quiz finish reward">
     {/if}
 </main>
 
@@ -98,5 +98,10 @@ h2 {
 .incorrect {
     background-color: var(--clr-error) !important;
     color: var(--clr-bg) !important;
+}
+
+img {
+    display: block;
+    margin-inline: auto;
 }
 </style>
